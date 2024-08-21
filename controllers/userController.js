@@ -3,6 +3,7 @@ import User from "../models/UserModel.js";
 import Job from "../models/JobModel.js";
 import cloudinary from "cloudinary";
 import { promises as fs } from "fs";
+import { formatImage } from "../middleware/multerMiddleware.js";
 
 export const getCurrentUser = async (req, res) => {
   const user = await User.findOne({ _id: req.user.userId });
@@ -22,9 +23,9 @@ export const updateUser = async (req, res) => {
 
   // if we want to upload a photo
   if (req.file) {
+    const file = formatImage(req.file);
     // then we upload that photo in cloudinary
     const response = await cloudinary.v2.uploader.upload(req.file.path);
-    await fs.unlink(req.file.path);
     // then add/bind the photo's cloudinary url as a value to mongodb avatar field
     newUser.avatar = response.secure_url;
     // then add/bind the photo's cloudinary public_id as avalue to mongodb avatarPublicId field
