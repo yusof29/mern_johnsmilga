@@ -25,7 +25,7 @@ export const updateUser = async (req, res) => {
   if (req.file) {
     const file = formatImage(req.file);
     // then we upload that photo in cloudinary
-    const response = await cloudinary.v2.uploader.upload(req.file.path);
+    const response = await cloudinary.v2.uploader.upload(file);
     // then add/bind the photo's cloudinary url as a value to mongodb avatar field
     newUser.avatar = response.secure_url;
     // then add/bind the photo's cloudinary public_id as avalue to mongodb avatarPublicId field
